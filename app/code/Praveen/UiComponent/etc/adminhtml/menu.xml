@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+   <menu>
+       <add id="Praveen_UiComponent::employee"
+           title="Employee" module="Praveen_UiComponent"
+           sortOrder="10"
+           resource="Magento_Backend::content"
+           />
+       <!-- START: new node -->  
+       <add id="Praveen_UiComponent::employee_listing"
+           title="Employee Listing" module="Praveen_UiComponent"
+           sortOrder="10" parent="Praveen_UiComponent::employee"
+           action="uiform/employee/index"
+           resource="Praveen_UiComponent::employee_listing"
+           />
+	<add id="Praveen_UiComponent::employee_add"
+           title="Add Employee" module="Praveen_UiComponent"
+           sortOrder="10" parent="Praveen_UiComponent::employee"
+           action="uiform/employee/create"
+           resource="Praveen_UiComponent::employee_add"
+           />
+        <!-- END:   new node -->
+   </menu>
+</config>
+
