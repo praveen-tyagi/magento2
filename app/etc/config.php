@@ -264,6 +264,7 @@ return [
         'Magento_PaypalReCaptcha' => 1,
         'MSP_TwoFactorAuth' => 1,
         'MagePal_GmailSmtpApp' => 1,
+        'Praveen_Contactajax' => 1,
         'Praveen_UiComponent' => 1,
         'Temando_ShippingRemover' => 1,
         'Vertex_Tax' => 1,

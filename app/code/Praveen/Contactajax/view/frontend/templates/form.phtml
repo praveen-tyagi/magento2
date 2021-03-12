@@ -1,0 +1,114 @@
+<form 
+    class="" 
+    enctype="multipart/form-data" 
+    name="eventform" 
+    id="eventform" 
+    action="<?php echo $block->getBaseUrl().'contactajax/index/post/';?>"
+    method="post" 
+    accept-charset="utf-8"  
+    data-mage-init='{"validation":{}}' action="<?php echo $block->getBaseUrl().'contactajax/index/post/';?>">
+    <table width="60%">
+        <tr>
+            <td colspan="2" align="center">User Form</td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('User First Name :'); ?></span></td>
+            <td><input type="text" name="fname" id="fname" placeholder="Enter User First Name" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('User Last Name :') ?></span></td>
+            <td><input type="text" name="lname" id="lname" placeholder="Enter User Last Name" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('Address :') ?></span> </td>
+            <td><textarea name="address" id="address" placeholder="Details of Address" class="input-text" cols="5" rows="3" data-validate="{required:true}"></textarea></td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('City :') ?></span></td>
+            <td><input type="text" name="city" id="city" placeholder="Enter User City Name" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('User Mobile Number :') ?></span></td>
+            <td><input type="text" name="mobilenumber" id="mobilenumber" placeholder="Enter User Mobile Number" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('File Name :') ?></span></td>
+            <td><input type="text" name="filename" id="filename" placeholder="Enter File Name" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+        <tr>
+            <td><span><?php /* @escapeNotVerified */ echo __('File Upload Here :') ?></span></td>
+            <td><input type="file" name="filepath" id="filepath" data-validate="{required:true}" value="" class="input-text" ></td>
+        </tr>
+        <!-- <tr>
+            <td><span><?php /* @escapeNotVerified */ //echo __('Event Date :') ?></span> </td>
+            <td><input type="date" name="date" id="date" placeholder="Event Date" value="" class="input-text"  data-validate="{required:true, 'validate-date':true}" ></td>
+        </tr> --> 
+        <tr>
+            <td colspan="2" align="center"><button type="submit" title="<?php /* @escapeNotVerified */ echo __('Submit') ?>" class="action submit primary">
+                <span><?php /* @escapeNotVerified */ echo __('Submit') ?></span>
+            </button></td>
+        </tr>
+    </table> 
+</form>
+
+
+<script>
+require(['jquery'],function(){
+    jQuery(document).ready(function() {
+        jQuery("#eventform").submit(function(){
+            if (jQuery('#eventform').valid()) {
+                jQuery('.page.messages').html('');
+                //var event_fname = jQuery("input[name='fname']").val();
+                //var event_lname = jQuery("input[name='lname']").val();
+                //var event_address = jQuery("input[name='address']").val();
+                //var event_address = jQuery("textarea[name='address']").val();
+                //var event_city = jQuery("input[name='city']").val();
+                //var event_mobilenumber = jQuery("input[name='mobilenumber']").val();
+                //var event_filename = jQuery("input[name='filename']").val();
+
+                var formData = new FormData(this);
+                var file_obj = document.getElementById("filepath");
+		alert(file_obj.files[0]['name']);
+		alert(file_obj.files[0]['type']);
+                //formData.append('filename', file_obj.files[0]['name']);
+		//formData.append('file_obj', file_obj);
+		formData.append('filepath', file_obj.files[0]);
+
+                var url = "<?php echo $block->getBaseUrl().'contactajax/index/post/';?>";
+                jQuery.ajax({
+                    url: url,
+                    type: "POST",
+                    dataType: "JSON",
+                    contentType: false,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    //data: {fname:event_fname,lname:event_lname,address:event_address,city:event_city,mobilenumber:event_mobilenumber,filename:event_filename},
+                    data: formData,
+                    showLoader: true,
+                    cache: false,
+                    success: function(response){
+                        //console.log(response.output);
+                        //jQuery('.page.messages').html(response);
+                        if(response == "1"){
+                            //alert("Saved!");
+                            jQuery(".page.messages").html('<div role="alert" class="messages"><div class="message-success success message" data-ui-id="message-success"><div >You saved the data.</div></div></div>');
+                            jQuery('#fname').val('');
+                            jQuery('#lname').val('');
+                            jQuery('#address').val('');
+                            jQuery('#city').val('');
+                            jQuery('#mobilenumber').val('');
+                        }else{
+                            //alert("Not Saved!");
+                            jQuery(".page.messages").html('<div role="alert" class="messages"><div class="alert danger alert-danger" data-ui-id="message-danger"><div >Data could not saved ! .</div></div></div>');
+                        }
+                        jQuery(".page.messages").delay(200).fadeIn().delay(4000).fadeOut();
+                    }
+                });
+                return false;
+            }
+
+        });
+    });
+});
+</script>
