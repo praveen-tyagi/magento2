@@ -51,7 +51,8 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
         EmailMessageInterfaceFactory $emailMessageInterfaceFactory = null,
         MimeMessageInterfaceFactory $mimeMessageInterfaceFactory = null,
         MimePartInterfaceFactory $mimePartInterfaceFactory = null,
-        AddressConverter $addressConverter = null
+        AddressConverter $addressConverter = null,
+	PartFactory $partFactory
     ) {
         $this->templateFactory = $templateFactory;
         $this->objectManager = $objectManager;
@@ -65,7 +66,7 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
             ->get(MimePartInterfaceFactory::class);
         $this->addressConverter = $addressConverter ?: $this->objectManager
             ->get(AddressConverter::class);
-        //$this->partFactory = $objectManager->get(PartFactory::class);
+	$this->partFactory = $partFactory;
         parent::__construct(
             $templateFactory,
             $message,
