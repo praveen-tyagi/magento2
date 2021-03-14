@@ -59,20 +59,9 @@ require(['jquery'],function(){
         jQuery("#eventform").submit(function(){
             if (jQuery('#eventform').valid()) {
                 jQuery('.page.messages').html('');
-                //var event_fname = jQuery("input[name='fname']").val();
-                //var event_lname = jQuery("input[name='lname']").val();
-                //var event_address = jQuery("input[name='address']").val();
-                //var event_address = jQuery("textarea[name='address']").val();
-                //var event_city = jQuery("input[name='city']").val();
-                //var event_mobilenumber = jQuery("input[name='mobilenumber']").val();
-                //var event_filename = jQuery("input[name='filename']").val();
-
                 var formData = new FormData(this);
                 var file_obj = document.getElementById("filepath");
-		alert(file_obj.files[0]['name']);
-		alert(file_obj.files[0]['type']);
-                //formData.append('filename', file_obj.files[0]['name']);
-		//formData.append('file_obj', file_obj);
+		//alert(file_obj.files[0]['name']);		
 		formData.append('filepath', file_obj.files[0]);
 
                 var url = "<?php echo $block->getBaseUrl().'contactajax/index/post/';?>";
@@ -87,9 +76,7 @@ require(['jquery'],function(){
                     data: formData,
                     showLoader: true,
                     cache: false,
-                    success: function(response){
-                        //console.log(response.output);
-                        //jQuery('.page.messages').html(response);
+                    success: function(response){                        
                         if(response == "1"){
                             //alert("Saved!");
                             jQuery(".page.messages").html('<div role="alert" class="messages"><div class="message-success success message" data-ui-id="message-success"><div >You saved the data.</div></div></div>');

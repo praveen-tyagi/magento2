@@ -1,18 +1,15 @@
 <?php
  
 namespace Praveen\Contactajax\Controller\Index;
- 
-use Magento\Framework\App\Request\DataPersistorInterface;
-use Magento\Framework\App\ObjectManager;
- 
 
 use Magento\Framework\App\Action\Context;
 use Magento\MediaStorage\Model\File\UploaderFactory;
 use Magento\Framework\Image\AdapterFactory;
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Zend\Log\Filter\Timestamp;
 use Magento\Store\Model\StoreManagerInterface;
+use \Magento\Framework\Translate\Inline\StateInterface;
+use \Praveen\Contactajax\Mail\Template\TransportBuilder;
 class Post extends \Magento\Framework\App\Action\Action
 {
     
@@ -24,10 +21,8 @@ class Post extends \Magento\Framework\App\Action\Action
     const EMAIL_IDENTIFIER_TEMPLATE = 'customemail_email_template';
     protected $_inlineTranslation;
     protected $_transportBuilder;
-    protected $_scopeConfig;
-    protected $_logLoggerInterface;
     protected $storeManager;
-    protected $messageManager;
+    
     /*
     @param \Magento\frontend\Block\Template\Context $context
 
@@ -35,10 +30,8 @@ class Post extends \Magento\Framework\App\Action\Action
     */
     public function __construct(
         Context $context,
-	\Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
-        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Psr\Log\LoggerInterface $loggerInterface,
+	StateInterface $inlineTranslation,
+        TransportBuilder $transportBuilder,
         StoreManagerInterface $storeManager,
         UploaderFactory $uploaderFactory,
         AdapterFactory $adapterFactory,
@@ -51,25 +44,16 @@ class Post extends \Magento\Framework\App\Action\Action
         $this->filesystem = $filesystem;
 	$this->_inlineTranslation = $inlineTranslation;
         $this->_transportBuilder = $transportBuilder;
-        $this->_scopeConfig = $scopeConfig;
-        $this->_logLoggerInterface = $loggerInterface;
-        $this->messageManager = $context->getMessageManager();
         $this->storeManager = $storeManager;
          
         parent::__construct($context);
-        //parent::__construct($context,$contactsConfig,$mail,$dataPersistor,$logger);
     }
     
     public function execute()
     {
 	$baseUrl = $this->storeManager->getStore()->getBaseUrl();
 	$storeId = $this->storeManager->getStore()->getStoreId();
-        $data = $this->getRequest()->getParams();
-	/*$templateName = $this->scopeConfig->getValue(
-            self::EMAIL_IDENTIFIER_TEMPLATE,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $storeId
-        );*/	
+        $data = $this->getRequest()->getParams();	
         if(isset($_FILES['filepath']['name']) && $_FILES['filepath']['tmp_name'] != '') {
             try{
 		$uploaderFactories = $this->uploaderFactory->create(['fileId' => 'filepath']);
@@ -92,9 +76,6 @@ class Post extends \Magento\Framework\App\Action\Action
             $imageName = pathinfo($result['name'],PATHINFO_BASENAME);
 		// Send Mail
             $this->_inlineTranslation->suspend();
-                         
-            //$sender = ['name' => "Praveen Tyagi",'email' => "praveen.tyagi15@gmail.com"];
-             
             $transport=$this->_transportBuilder
             ->setTemplateIdentifier('customemail_email_template')
             ->setTemplateOptions(
@@ -105,7 +86,9 @@ class Post extends \Magento\Framework\App\Action\Action
                 )
                 ->setTemplateVars([
                     'name'  => $data['fname'],
-                    'url'  => $mediaPath
+                    'lname'  => $data['lname'],
+		    'mobilenumber'  => $data['mobilenumber'],
+		    'address'  => $data['address']
                 ])
 		//->setFrom("praveen.tyagi15@gmail.com")
 		//->addTo("praveen.tyagi@utsavfashion.com")
@@ -113,14 +96,15 @@ class Post extends \Magento\Framework\App\Action\Action
                       'name' => 'Praveen Tyagi',
                       'email' => "praveen.tyagi15@gmail.com",
                   ])
-                  ->addTo("praveen.tyagi1504@gmail.com", "Prabhat")
+                  ->addTo("praveen.tyagi1504@gmail.com", "Praveen")
 		->addAttachment($content, $imageName, $result['type'])
 		->getTransport();
- /*  image attachment logic */
+ 		/*  image attachment logic */
             
                 $transport->sendMessage();
                  
                 $this->_inlineTranslation->resume();
+		$res = 1;
                 $this->messageManager->addSuccess('Email sent successfully');
                 //$this->_redirect('contactajax/index/index');
 
@@ -130,10 +114,10 @@ class Post extends \Magento\Framework\App\Action\Action
                 echo $e->getMessage();
             }
         }else{
-            $res = "File not found!";
+            $res = 0;
         }
 
-        echo json_encode($mediaPath);
+        echo json_encode($res);
 	
     }
 }
