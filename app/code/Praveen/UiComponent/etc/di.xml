@@ -10,12 +10,12 @@
 	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
 	    <arguments>
 		<argument name="collections" xsi:type="array">
-		    <item name="employee_listing_data_source" xsi:type="string">Praveen\UiComponent\Model\ResourceModel\Employee\Grid\Collection</item>
+		    <item name="employee_listing_data_source" xsi:type="string">EmployeeGridCollection</item>
 		</argument>
 	    </arguments>
 	</type>
 
-	<virtualType name="Praveen\UiComponent\Model\ResourceModel\Employee\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+	<virtualType name="EmployeeGridCollection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
 	    <arguments>
 		<argument name="mainTable" xsi:type="string">employee_details</argument>
 		<argument name="resourceModel" xsi:type="string">Praveen\UiComponent\Model\ResourceModel\Employee\Collection</argument>
